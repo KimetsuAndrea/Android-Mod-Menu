@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    ndkVersion "29.0.14206865"
     compileSdkVersion 36
     defaultConfig {
         applicationId "com.android.support"

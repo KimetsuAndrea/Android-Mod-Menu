@@ -65,6 +65,9 @@ import static android.widget.RelativeLayout.ALIGN_PARENT_LEFT;
 import static android.widget.RelativeLayout.ALIGN_PARENT_RIGHT;
 
 public class Menu {
+    static {
+        System.loadLibrary("MyLibName");
+    }
     //********** Here you can easly change the menu appearance **********//
     public static final String TAG = "Mod_Menu"; //Tag for logcat
 
