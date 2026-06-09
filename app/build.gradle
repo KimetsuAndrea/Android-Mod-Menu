@@ -34,6 +34,10 @@ android {
         }
     }
     namespace 'com.android.support'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 }
 
 //dependencies must be placed below 'android' brackets to get it work on AIDE

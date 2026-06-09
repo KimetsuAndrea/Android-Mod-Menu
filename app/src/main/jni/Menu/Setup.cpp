@@ -1,53 +1,86 @@
 #include "Includes/obfuscate.h"
 #include "Menu/Menu.hpp"
 #include "Utils.hpp"
+#include "Includes/Logger.h"
 
 int RegisterMenu(JNIEnv *env) {
+    const char* menuClassName = OBFUSCATE("com/android/support/Menu");
+    jclass clazz = env->FindClass(menuClassName);
+    if (!clazz) {
+        LOGE("Can't find Menu class");
+        return JNI_ERR;
+    }
+
+    const char* iconName = OBFUSCATE("Icon");
+    const char* iconSig = OBFUSCATE("()Ljava/lang/String;");
+    const char* iconWebName = OBFUSCATE("IconWebViewData");
+    const char* iconWebSig = OBFUSCATE("()Ljava/lang/String;");
+    const char* isLoadedName = OBFUSCATE("IsGameLibLoaded");
+    const char* isLoadedSig = OBFUSCATE("()Z");
+    const char* initName = OBFUSCATE("Init");
+    const char* initSig = OBFUSCATE("(Landroid/content/Context;Landroid/widget/TextView;Landroid/widget/TextView;)V");
+    const char* settingsName = OBFUSCATE("SettingsList");
+    const char* settingsSig = OBFUSCATE("()[Ljava/lang/String;");
+    const char* featuresName = OBFUSCATE("GetFeatureList");
+    const char* featuresSig = OBFUSCATE("()[Ljava/lang/String;");
+
     JNINativeMethod methods[] = {
-            {OBFUSCATE("Icon"),            OBFUSCATE(
-                                                   "()Ljava/lang/String;"),                                                           reinterpret_cast<void *>(Icon)},
-            {OBFUSCATE("IconWebViewData"), OBFUSCATE(
-                                                   "()Ljava/lang/String;"),                                                           reinterpret_cast<void *>(IconWebViewData)},
-            {OBFUSCATE("IsGameLibLoaded"), OBFUSCATE(
-                                                   "()Z"),                                                                            reinterpret_cast<void *>(isGameLibLoaded)},
-            {OBFUSCATE("Init"),            OBFUSCATE(
-                                                   "(Landroid/content/Context;Landroid/widget/TextView;Landroid/widget/TextView;)V"), reinterpret_cast<void *>(Init)},
-            {OBFUSCATE("SettingsList"),    OBFUSCATE(
-                                                   "()[Ljava/lang/String;"),                                                          reinterpret_cast<void *>(SettingsList)},
-            {OBFUSCATE("GetFeatureList"),  OBFUSCATE(
-                                                   "()[Ljava/lang/String;"),                                                          reinterpret_cast<void *>(GetFeatureList)},
+            {iconName,    iconSig,    reinterpret_cast<void *>(Icon)},
+            {iconWebName, iconWebSig, reinterpret_cast<void *>(IconWebViewData)},
+            {isLoadedName, isLoadedSig, reinterpret_cast<void *>(isGameLibLoaded)},
+            {initName,    initSig,    reinterpret_cast<void *>(Init)},
+            {settingsName, settingsSig, reinterpret_cast<void *>(SettingsList)},
+            {featuresName, featuresSig, reinterpret_cast<void *>(GetFeatureList)},
     };
 
-    jclass clazz = env->FindClass(OBFUSCATE("com/android/support/Menu"));
-    if (!clazz)
+    if (env->RegisterNatives(clazz, methods, sizeof(methods) / sizeof(methods[0])) != 0) {
+        LOGE("Can't register Menu natives");
         return JNI_ERR;
-    if (env->RegisterNatives(clazz, methods, sizeof(methods) / sizeof(methods[0])) != 0)
-        return JNI_ERR;
+    }
     return JNI_OK;
 }
 
 int RegisterPreferences(JNIEnv *env) {
+    const char* prefsClassName = OBFUSCATE("com/android/support/Preferences");
+    jclass clazz = env->FindClass(prefsClassName);
+    if (!clazz) {
+        LOGE("Can't find Preferences class");
+        return JNI_ERR;
+    }
+
+    const char* changesName = OBFUSCATE("Changes");
+    const char* changesSig = OBFUSCATE("(Landroid/content/Context;ILjava/lang/String;IJZLjava/lang/String;)V");
+
     JNINativeMethod methods[] = {
-            {OBFUSCATE("Changes"), OBFUSCATE("(Landroid/content/Context;ILjava/lang/String;IJZLjava/lang/String;)V"), reinterpret_cast<void *>(Changes)},
+            {changesName, changesSig, reinterpret_cast<void *>(Changes)},
     };
-    jclass clazz = env->FindClass(OBFUSCATE("com/android/support/Preferences"));
-    if (!clazz)
+
+    if (env->RegisterNatives(clazz, methods, sizeof(methods) / sizeof(methods[0])) != 0) {
+        LOGE("Can't register Preferences natives");
         return JNI_ERR;
-    if (env->RegisterNatives(clazz, methods, sizeof(methods) / sizeof(methods[0])) != 0)
-        return JNI_ERR;
+    }
     return JNI_OK;
 }
 
 int RegisterMain(JNIEnv *env) {
+    const char* mainClassName = OBFUSCATE("com/android/support/Main");
+    jclass clazz = env->FindClass(mainClassName);
+    if (!clazz) {
+        LOGE("Can't find Main class");
+        return JNI_ERR;
+    }
+
+    const char* checkPermName = OBFUSCATE("CheckOverlayPermission");
+    const char* checkPermSig = OBFUSCATE("(Landroid/content/Context;)V");
+
     JNINativeMethod methods[] = {
-            {OBFUSCATE("CheckOverlayPermission"), OBFUSCATE("(Landroid/content/Context;)V"),
-             reinterpret_cast<void *>(CheckOverlayPermission)},
+            {checkPermName, checkPermSig, reinterpret_cast<void *>(CheckOverlayPermission)},
     };
-    jclass clazz = env->FindClass(OBFUSCATE("com/android/support/Main"));
-    if (!clazz)
+
+    if (env->RegisterNatives(clazz, methods, sizeof(methods) / sizeof(methods[0])) != 0) {
+        LOGE("Can't register Main natives");
         return JNI_ERR;
-    if (env->RegisterNatives(clazz, methods, sizeof(methods) / sizeof(methods[0])) != 0)
-        return JNI_ERR;
+    }
 
     return JNI_OK;
 }
@@ -56,12 +89,18 @@ extern "C"
 JNIEXPORT jint JNICALL
 JNI_OnLoad(JavaVM *vm, void *reserved) {
     JNIEnv *env;
-    vm->GetEnv((void **) &env, JNI_VERSION_1_6);
-    if (RegisterMenu(env) != 0)
+    if (vm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_OK) {
         return JNI_ERR;
-    if (RegisterPreferences(env) != 0)
-        return JNI_ERR;
-    if (RegisterMain(env) != 0)
-        return JNI_ERR;
+    }
+
+    if (RegisterMenu(env) != JNI_OK) return JNI_ERR;
+    if (env->ExceptionCheck()) { env->ExceptionDescribe(); env->ExceptionClear(); }
+
+    if (RegisterPreferences(env) != JNI_OK) return JNI_ERR;
+    if (env->ExceptionCheck()) { env->ExceptionDescribe(); env->ExceptionClear(); }
+
+    if (RegisterMain(env) != JNI_OK) return JNI_ERR;
+    if (env->ExceptionCheck()) { env->ExceptionDescribe(); env->ExceptionClear(); }
+
     return JNI_VERSION_1_6;
 }
