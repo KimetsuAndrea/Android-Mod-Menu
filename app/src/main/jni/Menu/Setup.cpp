@@ -3,6 +3,51 @@
 #include "Utils.hpp"
 #include "Includes/Logger.h"
 
+// Fallback JNI exports for static registration
+extern "C" {
+JNIEXPORT jstring JNICALL
+Java_com_android_support_Menu_Icon(JNIEnv *env, jobject thiz) {
+    return Icon(env, thiz);
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_android_support_Menu_IconWebViewData(JNIEnv *env, jobject thiz) {
+    return IconWebViewData(env, thiz);
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_android_support_Menu_IsGameLibLoaded(JNIEnv *env, jobject thiz) {
+    return isGameLibLoaded(env, thiz);
+}
+
+JNIEXPORT void JNICALL
+Java_com_android_support_Menu_Init(JNIEnv *env, jobject thiz, jobject ctx, jobject title, jobject subtitle) {
+    Init(env, thiz, ctx, title, subtitle);
+}
+
+JNIEXPORT jobjectArray JNICALL
+Java_com_android_support_Menu_SettingsList(JNIEnv *env, jobject thiz) {
+    return SettingsList(env, thiz);
+}
+
+JNIEXPORT jobjectArray JNICALL
+Java_com_android_support_Menu_GetFeatureList(JNIEnv *env, jobject thiz) {
+    return GetFeatureList(env, thiz);
+}
+
+JNIEXPORT void JNICALL
+Java_com_android_support_Preferences_Changes(JNIEnv *env, jclass clazz, jobject obj,
+                                             jint featNum, jstring featName, jint value,
+                                             jlong Lvalue, jboolean boolean, jstring str) {
+    Changes(env, clazz, obj, featNum, featName, value, Lvalue, boolean, str);
+}
+
+JNIEXPORT void JNICALL
+Java_com_android_support_Main_CheckOverlayPermission(JNIEnv *env, jclass thiz, jobject ctx) {
+    CheckOverlayPermission(env, thiz, ctx);
+}
+}
+
 int RegisterMenu(JNIEnv *env) {
     const char* menuClassName = OBFUSCATE("com/android/support/Menu");
     jclass clazz = env->FindClass(menuClassName);
