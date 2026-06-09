@@ -220,7 +220,7 @@ install_hook_name(AddScore, void *, void *instance, int score) {
     // default any actions
 
     // use orig_ for call original function
-    return orig_AddScore(instance, score + scoreMul);
+    return orig_AddScore(instance, score * scoreMul);
 }
 
 void (*old_AddCoins)(void *instance, int count);
@@ -242,7 +242,6 @@ void hack_thread() {
 #if defined(__aarch64__)
     //Il2Cpp: Use RVA offset
     StartInvcibility = (void (*)(void *, float)) getAbsoluteAddress(targetLibName, OBFUSCATE("0x107A3BC"));
-    StartInvcibility = (void (*)(void *, float)) getAbsoluteAddress(targetLibName, OBFUSCATE("_characterPlayer_Update"));
 
     HOOK(targetLibName, "0x107A2FC", AddCoins, old_AddCoins);
 

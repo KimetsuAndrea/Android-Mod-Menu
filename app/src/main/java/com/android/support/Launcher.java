@@ -10,6 +10,8 @@ import android.view.View;
 public class Launcher extends Service {
 
     Menu menu;
+    Handler handler;
+    Runnable runnable;
 
     //When this Class is called the code in this function will be executed
     @Override
@@ -21,13 +23,14 @@ public class Launcher extends Service {
         menu.ShowMenu();
 
         //Create a handler for this Class
-        final Handler handler = new Handler();
-        handler.post(new Runnable() {
+        handler = new Handler();
+        runnable = new Runnable() {
             public void run() {
                Thread();
                 handler.postDelayed(this, 1000);
             }
-        });
+        };
+        handler.post(runnable);
     }
 
     @Override
@@ -39,7 +42,7 @@ public class Launcher extends Service {
     private boolean isNotInGame() {
         ActivityManager.RunningAppProcessInfo runningAppProcessInfo = new ActivityManager.RunningAppProcessInfo();
         ActivityManager.getMyMemoryState(runningAppProcessInfo);
-        return runningAppProcessInfo.importance != 100;
+        return runningAppProcessInfo.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
     }
 
     private void Thread() {
@@ -53,6 +56,9 @@ public class Launcher extends Service {
     //Destroy our View
     public void onDestroy() {
         super.onDestroy();
+        if (handler != null && runnable != null) {
+            handler.removeCallbacks(runnable);
+        }
         menu.onDestroy();
     }
 

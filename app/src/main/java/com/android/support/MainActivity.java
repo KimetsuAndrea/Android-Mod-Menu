@@ -9,7 +9,7 @@ public class MainActivity extends Activity {
 
     //Only if you have changed MainActivity to yours and you wanna call game's activity.
     public String GameActivity = "com.unity3d.player.UnityPlayerActivity";
-    public boolean hasLaunched = false;
+    public static boolean hasLaunched = false;
 
     //To call onCreate, please refer to README.md
     @Override
@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
                 //Launch mod menu.
                 MainActivity.this.startActivity(new Intent(MainActivity.this, Class.forName(MainActivity.this.GameActivity)));
                 Main.Start(this);
+                finish();
                 return;
             } catch (ClassNotFoundException e) {
                 Log.w("Mod_menu", "Warning: Target game activity (" + MainActivity.this.GameActivity + ") not found. Starting menu service anyway.");
@@ -43,5 +44,6 @@ public class MainActivity extends Activity {
         //Launch mod menu.
        // Main.StartWithoutPermission(this);
         Main.Start(this);
+        finish();
     }
 }
