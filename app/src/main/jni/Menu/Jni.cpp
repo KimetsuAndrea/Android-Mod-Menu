@@ -14,7 +14,7 @@
 #include "Menu/Jni.hpp"
 #include "Includes/Logger.h"
 
-void Dialog(JNIEnv *env, jobject context, const char *title, const char *message, const char *openBtn, const char *closeBtn, int sec, const char *url) {
+extern "C" void Dialog(JNIEnv *env, jobject context, const char *title, const char *message, const char *openBtn, const char *closeBtn, int sec, const char *url) {
     jclass dialogHelperClass = env->FindClass(OBFUSCATE("com/android/support/DialogHelper"));
     jmethodID showMethod = env->GetStaticMethodID(dialogHelperClass, OBFUSCATE("showDialogWithLink"),
                                                   OBFUSCATE("(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V"));
@@ -40,7 +40,7 @@ void Dialog(JNIEnv *env, jobject context, const char *title, const char *message
     env->DeleteLocalRef(jUrl);
 }
 
-void Toast(JNIEnv *env, jobject thiz, const char *text, int length) {
+extern "C" void Toast(JNIEnv *env, jobject thiz, const char *text, int length) {
     jstring jstr = env->NewStringUTF(text);
     jclass toast = env->FindClass(OBFUSCATE("android/widget/Toast"));
     jmethodID methodMakeText =env->GetStaticMethodID(toast,OBFUSCATE("makeText"),OBFUSCATE("(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;"));
@@ -50,7 +50,7 @@ void Toast(JNIEnv *env, jobject thiz, const char *text, int length) {
 }
 
 //Big letter cause crash
-void setText(JNIEnv *env, jobject obj, const char* text){
+extern "C" void setText(JNIEnv *env, jobject obj, const char* text){
     //https://stackoverflow.com/a/33627640/3763113
     //A little JNI calls here. You really really need a great knowledge if you want to play with JNI stuff
     //Html.fromHtml("");
@@ -66,7 +66,7 @@ void setText(JNIEnv *env, jobject obj, const char* text){
     (*env).CallVoidMethod(obj, setText,  (*env).CallStaticObjectMethod(html, fromHtml, jstr));
 }
 
-void startService(JNIEnv *env, jobject ctx){
+extern "C" void startService(JNIEnv *env, jobject ctx){
     jclass native_context = env->GetObjectClass(ctx);
     jclass intentClass = env->FindClass(OBFUSCATE("android/content/Intent"));
     jclass actionString = env->FindClass(OBFUSCATE("com/android/support/Launcher"));
@@ -81,7 +81,7 @@ void *exit_thread(void *) {
     exit(0);
 }
 
-int get_api_sdk(JNIEnv* env) {
+extern "C" int get_api_sdk(JNIEnv* env) {
     jclass build_version_class = env->FindClass(OBFUSCATE("android/os/Build$VERSION"));
     jfieldID sdk_int_field = env->GetStaticFieldID(build_version_class, OBFUSCATE("SDK_INT"), OBFUSCATE("I"));
     return env->GetStaticIntField(build_version_class, sdk_int_field);
@@ -113,7 +113,7 @@ void startActivityPermisson(JNIEnv *env, jobject ctx){
 }
 
 //Needed jclass parameter because this is a static java method
-void CheckOverlayPermission(JNIEnv *env, jclass thiz, jobject ctx){
+extern "C" void CheckOverlayPermission(JNIEnv *env, jclass thiz, jobject ctx){
     //If overlay permission option is greyed out, make sure to add android.permission.SYSTEM_ALERT_WINDOW in manifest
 
     LOGI(OBFUSCATE("Check overlay permission"));

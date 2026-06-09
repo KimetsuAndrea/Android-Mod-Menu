@@ -38,7 +38,7 @@ add_library(MyLibName SHARED
 
 # Compiler flags
 target_compile_options(MyLibName PRIVATE
-        -w -s -Wno-error=format-security -fvisibility=hidden -fpermissive -fexceptions -Werror
+        -w -Wno-error=format-security -fvisibility=default -fpermissive -fexceptions -Werror
         -Wno-error=c++11-narrowing -Wall
 )
 
