@@ -28,6 +28,11 @@ void Dialog(JNIEnv *env, jobject context, const char *title, const char *message
 
     env->CallStaticVoidMethod(dialogHelperClass, showMethod, context, jTitle, jMessage, jOpen, jClose, jSec, jUrl);
 
+    if (env->ExceptionCheck()) {
+        env->ExceptionDescribe();
+        env->ExceptionClear();
+    }
+
     env->DeleteLocalRef(jTitle);
     env->DeleteLocalRef(jMessage);
     env->DeleteLocalRef(jOpen);

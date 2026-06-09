@@ -1,12 +1,15 @@
 package com.android.support;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 public class DialogHelper {
@@ -25,6 +28,14 @@ public class DialogHelper {
         }
 
         final AlertDialog dialog = builder.create();
+
+        if (!(context instanceof Activity)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+            } else {
+                dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_PHONE);
+            }
+        }
 
         String closeInitTitle = CloseBtnTitle;
         if(sec > 0) {
